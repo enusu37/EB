@@ -16,7 +16,7 @@
 
   "nickNameBot": "─꯭𓆩»̶̶͓͓͓̽̽̽𝆠꯭፝֟𝐒𝐈𝐙𝐔𝐊𝐀𝆠꯭፝֟𓆩𝆠፝𝐁𝐀𝐁𝐘𝆠꯭፝֟𝆠꯭፝֟𓆪🐱🩵🪽",
 
-  "prefix": "/",
+  "prefix": "+",
 
   "adminOnly": {
     "enable": false,
@@ -24,7 +24,7 @@
   },
 
   "adminBot": [
-    "61573366160918",
+    "100065568407761",
     "61583610247347"
   ],
 
@@ -38,7 +38,7 @@
   "reactUnsend": {
     "enable": true,
     "onlyAdmin": true,
-    "emojis": ["👌", "😾"],
+    "emojis": ["😡", "😘"],
     "notes": "If enable = true, bot will unsend any message reacted with these emojis. If onlyAdmin = true, only adminBot IDs can trigger it."
   },
 
