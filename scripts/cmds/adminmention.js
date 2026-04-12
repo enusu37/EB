@@ -1,58 +1,36 @@
-const fs = require("fs-extra");
-
 module.exports = {
   config: {
     name: "adminmention",
-    version: "7.0.0",
-    author: "Farhan-Khan", // ⚠️ এটা change করলে bot বন্ধ হয়ে যাবে
+    version: "1.4.0",
+    author: "ALVI-BOSS",
     countDown: 0,
     role: 0,
-    shortDescription: "Admin mention reply styled",
-    category: "system"
+    shortDescription: "Angry reply when admin is mentioned",
+    longDescription: "Bot replies angrily if someone mentions admin name",
+    category: "fun"
   },
 
   onStart: async function () {},
 
-  onChat: async function ({ event, message }) {
+  onChat: async function ({ event, message, usersData }) {
+    if (!event.body) return;
 
-    // 🔒 AUTHOR LOCK
-    if (this.config.author !== "Farhan-Khan") {
-      console.log("⚠️ Author changed! Module stopped.");
-      return;
-    }
-
-    // 👑 ADMINS
-    const admins = [
-      {
-        uid: "100065568407761",
-        names: ["ᎬᏴᎡᎪᎻᏆᎷ ᎪᎻᎪᎷᎬᎠ"]
-      },
-      {
-        uid: "61583610247347",
-        names: ["ヽ｟ᏟᎬϴ｠▁▁ዐዐዐ 🙁😚☺️👿"]
-      }
-    ];
-
+    const adminUID = "100065568407761","61554317974657"; // admin UID
     const senderID = String(event.senderID);
 
-    // ❌ Admin নিজে লিখলে reply দিবে না
-    if (admins.some(a => a.uid === senderID)) return;
+    // admin নিজে হলে ignore
+    if (senderID === adminUID) return;
 
-    const text = (event.body || "").toLowerCase().trim();
-    const mentionedIDs = event.mentions ? Object.keys(event.mentions) : [];
+    // admin name বের করা
+    const adminName = await usersData.getName(adminUID);
+    if (!adminName) return;
 
-    // 🔍 MENTION DETECT
-    const isMentioning = admins.some(admin =>
-      mentionedIDs.includes(admin.uid) ||
-      text.includes(admin.uid) ||
-      admin.names.some(name => text.includes(name.toLowerCase()))
-    );
+    // message এ admin নাম আছে কিনা
+    const text = event.body.toLowerCase();
+    if (!text.includes(adminName.toLowerCase())) return;
 
-    if (!isMentioning) return;
-
-    // 💬 RAW CAPTIONS
-    const captions = [
-    "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
+    const REPLIES = [
+      "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
       "মেনশন দিছস ঠিকই, কিন্তু বস তো এখন নেট অফ রাখছে 🤫📴",
       "বস বলল তোরে রেপ্লাই দিবে কিন্তু আগে তুই গোসল করে আয় 🤢🧼",
       "বস তো এখন চা খাচ্ছে, তুই ততক্ষণ মাথা ঠান্ডা রাখ বস পড়ে আসবে 😌🍵",
@@ -63,25 +41,9 @@ module.exports = {
       "আবাল তুই মেনশন দিবি না আমার বস রে 🥹",
     ];
 
-    const formatCaption = (text) => {
-      return `
-━━━━━━━━━━━━━━━━━━━━
-- ${text}
-━━━━━━━━━━━━━━━━━━━━
-   [>ʙᴏᴛ ᴏᴡɴᴇʀ:-ꜰᴀʀʜᴀɴ-ᴋʜᴀɴ<]
-━━━━━━━━━━━━━━━━━━━━
-      `;
-    };
+    const randomReply =
+      REPLIES[Math.floor(Math.random() * REPLIES.length)];
 
-    const rawCaption = captions[Math.floor(Math.random() * captions.length)];
-    const styledCaption = formatCaption(rawCaption);
-
-    try {
-      await message.reply({
-        body: styledCaption
-      });
-    } catch (err) {
-      console.log("Error sending admin reply:", err);
-    }
+    return message.reply(randomReply);
   }
 };
