@@ -1,36 +1,58 @@
+const fs = require("fs-extra");
+
 module.exports = {
   config: {
     name: "adminmention",
-    version: "1.4.0",
-    author: "ALVI-BOSS",
+    version: "7.0.0",
+    author: "Farhan-Khan", // ⚠️ এটা change করলে bot বন্ধ হয়ে যাবে
     countDown: 0,
     role: 0,
-    shortDescription: "Angry reply when admin is mentioned",
-    longDescription: "Bot replies angrily if someone mentions admin name",
-    category: "fun"
+    shortDescription: "Admin mention reply styled",
+    category: "system"
   },
 
   onStart: async function () {},
 
-  onChat: async function ({ event, message, usersData }) {
-    if (!event.body) return;
+  onChat: async function ({ event, message }) {
 
-    const adminUID = "100065568407761","61554317974657"; // admin UID
+    // 🔒 AUTHOR LOCK
+    if (this.config.author !== "Farhan-Khan") {
+      console.log("⚠️ Author changed! Module stopped.");
+      return;
+    }
+
+    // 👑 ADMINS
+    const admins = [
+      {
+        uid: "61554317974657",
+        names: ["মিৃঁ'স্টাৃঁ'রৃঁ ফাৃঁ'রৃঁ'হা্ঁ'নৃঁ"]
+      },
+      {
+        uid: "100065568407761",
+        names: ["ヽ｟ᏟᎬϴ｠▁▁ዐዐዐ 🙁😚☺️👿"]
+      }
+    ];
+
     const senderID = String(event.senderID);
 
-    // admin নিজে হলে ignore
-    if (senderID === adminUID) return;
+    // ❌ Admin নিজে লিখলে reply দিবে না
+    if (admins.some(a => a.uid === senderID)) return;
 
-    // admin name বের করা
-    const adminName = await usersData.getName(adminUID);
-    if (!adminName) return;
+    const text = (event.body || "").toLowerCase().trim();
+    const mentionedIDs = event.mentions ? Object.keys(event.mentions) : [];
 
-    // message এ admin নাম আছে কিনা
-    const text = event.body.toLowerCase();
-    if (!text.includes(adminName.toLowerCase())) return;
+    // 🔍 MENTION DETECT
+    const isMentioning = admins.some(admin =>
+      mentionedIDs.includes(admin.uid) ||
+      text.includes(admin.uid) ||
+      admin.names.some(name => text.includes(name.toLowerCase()))
+    );
 
-    const REPLIES = [
-      "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
+    if (!isMentioning) return;
+
+    // 💬 RAW CAPTIONS
+    const captions = [
+     "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
       "মেনশন দিছস ঠিকই, কিন্তু বস তো এখন নেট অফ রাখছে 🤫📴",
       "বস বলল তোরে রেপ্লাই দিবে কিন্তু আগে তুই গোসল করে আয় 🤢🧼",
       "বস তো এখন চা খাচ্ছে, তুই ততক্ষণ মাথা ঠান্ডা রাখ বস পড়ে আসবে 😌🍵",
@@ -41,9 +63,15 @@ module.exports = {
       "আবাল তুই মেনশন দিবি না আমার বস রে 🥹",
     ];
 
-    const randomReply =
-      REPLIES[Math.floor(Math.random() * REPLIES.length)];
+    const rawCaption = captions[Math.floor(Math.random() * captions.length)];
+    const styledCaption = formatCaption(rawCaption);
 
-    return message.reply(randomReply);
+    try {
+      await message.reply({
+        body: styledCaption
+      });
+    } catch (err) {
+      console.log("Error sending admin reply:", err);
+    }
   }
 };
