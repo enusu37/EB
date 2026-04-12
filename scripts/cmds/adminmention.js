@@ -1,77 +1,57 @@
-const fs = require("fs-extra");
-
 module.exports = {
   config: {
     name: "adminmention",
-    version: "7.0.0",
-    author: "Farhan-Khan", // ⚠️ এটা change করলে bot বন্ধ হয়ে যাবে
+    version: "2.0.0",
+    author: "ALVI-BOSS (Modified by ChatGPT)",
     countDown: 0,
     role: 0,
-    shortDescription: "Admin mention reply styled",
-    category: "system"
+    shortDescription: "Reply when admin is mentioned",
+    longDescription: "Bot replies angrily if someone mentions any admin name",
+    category: "fun"
   },
 
   onStart: async function () {},
 
-  onChat: async function ({ event, message }) {
+  onChat: async function ({ event, message, usersData }) {
+    if (!event.body) return;
 
-    // 🔒 AUTHOR LOCK
-    if (this.config.author !== "Farhan-Khan") {
-      console.log("⚠️ Author changed! Module stopped.");
-      return;
-    }
-
-    // 👑 ADMINS
-    const admins = [
-      {
-        uid: "61554317974657",
-        names: ["মিৃঁ'স্টাৃঁ'রৃঁ ফাৃঁ'রৃঁ'হা্ঁ'নৃঁ"]
-      },
-      {
-        uid: "100065568407761",
-        names: ["ヽ｟ᏟᎬϴ｠▁▁ዐዐዐ 🙁😚☺️👿"]
-      }
+    const adminList = [
+      "100065568407761",
+      "61559151975368",
+      "61554317974657"
     ];
 
     const senderID = String(event.senderID);
 
-    // ❌ Admin নিজে লিখলে reply দিবে না
-    if (admins.some(a => a.uid === senderID)) return;
+    // যদি sender নিজেই admin হয়, তাহলে ignore
+    if (adminList.includes(senderID)) return;
 
-    const text = (event.body || "").toLowerCase().trim();
-    const mentionedIDs = event.mentions ? Object.keys(event.mentions) : [];
+    const text = event.body.toLowerCase();
 
-    // 🔍 MENTION DETECT
-    const isMentioning = admins.some(admin =>
-      mentionedIDs.includes(admin.uid) ||
-      text.includes(admin.uid) ||
-      admin.names.some(name => text.includes(name.toLowerCase()))
-    );
+    // সব admin check করবে
+    for (const adminUID of adminList) {
+      const adminName = await usersData.getName(adminUID);
+      if (!adminName) continue;
 
-    if (!isMentioning) return;
+      if (text.includes(adminName.toLowerCase())) {
 
-    // 💬 RAW CAPTIONS
-    const captions = [
-     "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
-      "মেনশন দিছস ঠিকই, কিন্তু বস তো এখন নেট অফ রাখছে 🤫📴",
-      "বস বলল তোরে রেপ্লাই দিবে কিন্তু আগে তুই গোসল করে আয় 🤢🧼",
-      "বস তো এখন চা খাচ্ছে, তুই ততক্ষণ মাথা ঠান্ডা রাখ বস পড়ে আসবে 😌🍵",
-      "বস এক আবালে আপনাকে মেনশন দিছে 😑🌚😁",
-      "বস এক পাগল ছাগল , আপনাকে ডাকতেছে 🐸🫵",
-      "বস এক হালায় আপনার নাম ধরছে , আপনি শুধু একবার আদেশ করুন, আজকে হালার নানিরে চমলক্ক করে দিমু 😑🥴",
-      "বস এক আবাল আপনাকে ডাকতেছে 😂😏",
-      "আবাল তুই মেনশন দিবি না আমার বস রে 🥹",
-    ];
+        const REPLIES = [
+          "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
+          "মেনশন দিছস ঠিকই, কিন্তু বস তো এখন নেট অফ রাখছে 🤫📴",
+          "বস বলল তোরে রেপ্লাই দিবে কিন্তু আগে তুই গোসল করে আয় 🤢🧼",
+          "বস তো এখন চা খাচ্ছে, তুই ততক্ষণ মাথা ঠান্ডা রাখ বস পড়ে আসবে 😌🍵",
+          "বস এক আবালে আপনাকে মেনশন দিছে 😑🌚😁",
+          "বস এক পাগল ছাগল , আপনাকে ডাকতেছে 🐸🫵",
+          "বস এক হালায় আপনার নাম ধরছে , আপনি শুধু একবার আদেশ করুন 😑🥴",
+          "বস এক আবাল আপনাকে ডাকতেছে 😂😏",
+          "আবাল তুই মেনশন দিবি না আমার বস রে 🥹"
+        ];
 
-    const rawCaption = captions[Math.floor(Math.random() * captions.length)];
-    const styledCaption = formatCaption(rawCaption);
+        const randomReply =
+          REPLIES[Math.floor(Math.random() * REPLIES.length)];
 
-    try {
-      await message.reply({
-        body: styledCaption
-      });
-    } catch (err) {
-      console.log("Error sending admin reply:", err);
+        return message.reply(randomReply);
+      }
     }
   }
 };
