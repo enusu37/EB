@@ -4,7 +4,7 @@ module.exports = {
   config: {
     name: "adminmention",
     version: "7.0.0",
-    author: "Farhan-Khan", // ⚠️ এটা change করলে bot বন্ধ হয়ে যাবে
+    author: "Farhan-Khan",
     countDown: 0,
     role: 0,
     shortDescription: "Admin mention reply styled",
@@ -24,7 +24,7 @@ module.exports = {
     // 👑 ADMINS
     const admins = [
       {
-        uid: "100065568407761"61556979016951",
+        uid: "100065568407761",
         names: ["ᎬᏴᎡᎪᎻᏆᎷ ᎪᎻᎪᎷᎬᎠ"]
       },
       {
@@ -33,16 +33,20 @@ module.exports = {
       }
     ];
 
-    const senderID = String(event.senderID);
+    // 🔥 SAFE senderID fallback (IMPORTANT FIX)
+    const senderID = String(
+      event.senderID || event.author || event.userID || event.fromID || ""
+    );
 
-    // ❌ Admin নিজে লিখলে reply দিবে না
+    // ❌ Admin নিজে message দিলে reply না
     if (admins.some(a => a.uid === senderID)) return;
 
     const text = (event.body || "").toLowerCase().trim();
     const mentionedIDs = event.mentions ? Object.keys(event.mentions) : [];
 
-    // 🔍 MENTION DETECT
+    // 🔍 MENTION DETECT FIXED
     const isMentioning = admins.some(admin =>
+      senderID === admin.uid ||
       mentionedIDs.includes(admin.uid) ||
       text.includes(admin.uid) ||
       admin.names.some(name => text.includes(name.toLowerCase()))
@@ -50,9 +54,9 @@ module.exports = {
 
     if (!isMentioning) return;
 
-    // 💬 RAW CAPTIONS
+    // 💬 CAPTIONS
     const captions = [
-     "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
+      "বস বলছে—\"এই আবালটা আবার কে?\" 😶🌫️📣",
       "মেনশন দিছস ঠিকই, কিন্তু বস তো এখন নেট অফ রাখছে 🤫📴",
       "বস বলল তোরে রেপ্লাই দিবে কিন্তু আগে তুই গোসল করে আয় 🤢🧼",
       "বস তো এখন চা খাচ্ছে, তুই ততক্ষণ মাথা ঠান্ডা রাখ বস পড়ে আসবে 😌🍵",
