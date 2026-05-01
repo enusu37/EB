@@ -28,8 +28,8 @@ module.exports = {
         names: ["ᎬᏴᎡᎪᎻᏆᎷ ᎪᎻᎪᎷᎬᎠ"]
       },
       {
-        uid: "61556979016951",
-        names: ["Êbrãhîm Âhämēd"]
+        uid: "61559151975368",
+        names: ["Jinia Maha"]
       }
     ];
 
