@@ -30,6 +30,10 @@ module.exports = {
       {
         uid: "61559151975368",
         names: ["Jinia Maha"]
+      },
+      {
+        uid: "61554317974657",
+        names: ["Alisha Khan Samira"]
       }
     ];
 
