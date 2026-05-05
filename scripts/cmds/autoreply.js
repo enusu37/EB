@@ -1,0 +1,52 @@
+const fs = require("fs-extra");
+
+module.exports = {
+  config: {
+    name: "autoreplybot",
+    aliases: ["auto", "ar"],
+    version: "6.3.0",
+    author: "ALVI (Fixed)",
+    countDown: 3,
+    role: 0,
+    shortDescription: {
+      en: "Auto reply bot"
+    },
+    longDescription: {
+      en: "Auto reply with trigger words"
+    },
+    category: "no prefix"
+  },
+
+  // ✅ MUST for Goat Bot v2
+  onStart: async function () {},
+
+  onChat: async function ({ api, event }) {
+    try {
+      const { threadID, messageID, senderID, body } = event;
+      if (!body || senderID == api.getCurrentUserID()) return;
+
+      const msg = body.toLowerCase();
+
+      const responses = {
+        "🙂": "কিরে আবাল গ্রুপে এসে ছেনটি খাস কেন!🙄",
+       "ebrahim": " কিরে তুই আমার বস ইব্রাহিম নাম ধরে ডাকিস তোর সাহস তো কম না 😾",
+       "alisha": "আলিশা গ্রুপের এডমিন সম্মান দিয়া কথা কবি 🤧",
+       "jinia": "আলিশা গ্রুপের এডমিন সম্মান দিয়া কথা কবি 🤧",
+      "alu": "কিরে আবাল তুই গ্রুপের এডমিনের নাম ভ্যাটকাস কেন 😾",
+        "gaiga": "মর গিয়া তুই!🤧",
+        "jaiga": "মর গিয়া তুই!🤧",
+        "kire": "হ্যা বস কেমন আছেন..?☺️",
+        "bot er baccha": "আমার বাচ্চা তো তোমার গার্লফ্রেন্ডের পেটে..!!🌚⛏️"
+      };
+
+      for (let key in responses) {
+        if (msg.includes(key)) {
+          return api.sendMessage(responses[key], threadID, messageID);
+        }
+      }
+
+    } catch (e) {
+      console.log("AutoReply Error:", e);
+    }
+  }
+};
