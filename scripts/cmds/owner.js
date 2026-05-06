@@ -11,7 +11,7 @@ module.exports = {
     shortDescription: "Owner information with image",
     category: "Information",
     guide: {
-      en: "owner","admin"
+      en: "owner"
     }
   },
 
