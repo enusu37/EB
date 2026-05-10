@@ -32,7 +32,7 @@ module.exports = {
       "alu": "কিরে আবাল তুই গ্রুপের এডমিনের নাম ভ্যাটকাস কেন 😾",
         "gaiga": "মর গিয়া তুই!🤧",
         "ebcd": "ebcd Full meaning ইব্রাহিম বড় ভাই",
-        "eb": "eb Full meaning ইব্রাহিম বড় ভাই💙❤️",
+        "eb": "eb Full meaning E for Ebrahim B for boro vai💙❤️",
         "jaiga": "মর গিয়া তুই!🤧",
         "boss": "আমার বস ইব্রাহিম সম্মান দিয়া কথা কবি! 🤧",
         "kire": "হ্যা বস কেমন আছেন..?☺️",
