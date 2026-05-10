@@ -1,6 +1,6 @@
- module.exports = {
- config: {
-    name: "teg",
+module.exports = {
+  config: {
+    name: "teg", // 👈 এখানে tag থেকে teg করা হয়েছে
     version: "2.0",
     author: "Shahadat Islam × Modified by ChatGPT",
     countDown: 5,
@@ -25,27 +25,40 @@
       const memberIDs = threadInfo.participantIDs;
 
       const repeatCount = parseInt(args[0]) || 1;
-
       const botID = api.getCurrentUserID();
 
       const mentions = [];
 
       for (const id of memberIDs) {
-        if (id != botID) {
+        if (id !== botID) {
           mentions.push({
-            tag: "everyone",
+            tag: "@everyone",
             id: id
           });
         }
       }
 
-      for (let i = 0; i < repeatCount; i++) {
-        await api.sendMessage({
-          body: "📢 @everyone\nসবাই চিপা থেকে বের হও 🐸",
-          mentions
-        }, threadID);
+      const msg =
+`📢 @everyone
+আপনি কি Group এসে আড্ডা দিতে দূর্বল..?🤔
+Sms দিতে ভয় পান ?🤕
+নাকি লজ্জা পান ?...🙈
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
+তাই...
+ব্যবহার করুন পাহাড়ি গাছ-গাছাড়া থেকে তৈরি👌
+Left নামক হারবাল 😹
+এক ফাইলই যথেষ্ট ।🐸`;
+
+      for (let i = 0; i < repeatCount; i++) {
+        await api.sendMessage(
+          {
+            body: msg,
+            mentions
+          },
+          threadID
+        );
+
+        await new Promise(r => setTimeout(r, 2000));
       }
 
     } catch (e) {
